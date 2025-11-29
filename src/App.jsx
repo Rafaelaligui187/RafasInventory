@@ -19,9 +19,9 @@ const App = () => {
       <Navbar />
 
       {/* Page content */}
-      <div style={{ marginTop: "70px" }}> 
+      <div> 
         <Routes>
-          <Route path="/" element={<Login />} />       
+          <Route path="/login" element={<Login />} />       
           <Route path="/home" element={<Home />} />   
           <Route path="/about" element={<About />} />  
           <Route path="/signup" element={<Signup />} /> 

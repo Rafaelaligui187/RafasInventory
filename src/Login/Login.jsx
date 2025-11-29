@@ -13,32 +13,22 @@ export default function Login() {
         </p>
       </div>
 
-      {/* Content Section */}
-      <div className="row">
-        <div className="col-md-4">
-          <div className="card shadow-sm p-3">
-            <h4>Add Products</h4>
-            <p>Easily add new items to your inventory.</p>
-            <a href="/add-product" className="btn btn-primary">Add Product</a>
-          </div>
+      {/* Login Form Section */}
+      <form className="w-50 mx-auto border p-4 rounded shadow bg-blue-light">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1"/>
+        </div>
+        <div class="d-grid gap-2">
+          <button class="btn btn-primary" type="submit">Login</button>
+          <p>Create account?<a href="/signup"> Signup</a></p>
         </div>
 
-        <div className="col-md-4">
-          <div className="card shadow-sm p-3">
-            <h4>View Inventory</h4>
-            <p>Check all items currently stored in your system.</p>
-            <a href="/inventory" className="btn btn-success">View Items</a>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card shadow-sm p-3">
-            <h4>Manage Account</h4>
-            <p>Access profile settings or modify login details.</p>
-            <a href="/profile" className="btn btn-secondary">Profile</a>
-          </div>
-        </div>
-      </div>
+      </form>
 
     </div>
   );
