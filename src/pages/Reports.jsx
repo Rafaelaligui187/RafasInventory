@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function About() {
+export default function Reports() {
   return (
     <>
     <p>about page</p>

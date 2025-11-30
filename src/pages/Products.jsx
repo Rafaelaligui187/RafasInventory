@@ -1,12 +1,10 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function About() {
+export default function Products() {
   return (
     <>
-    <p>about page</p>
+    <p>home page</p>
     </>
   );
 }
-
-
