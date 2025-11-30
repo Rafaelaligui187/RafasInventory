@@ -11,7 +11,6 @@ export default function Signup() {
     email: "",
     password: "",
     confirmPassword: "",
-    phone: "",
   });
 
   const handleChange = (e) => {
@@ -25,13 +24,13 @@ export default function Signup() {
       return;
     }
 
-    const { firstName, lastName, email, password, phone } = formData;
+    const { firstName, lastName, email, password } = formData;
 
     try {
       const response = await fetch("http://localhost:5000/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, password, phone }),
+        body: JSON.stringify({ firstName, lastName, email, password }),
       });
 
       const data = await response.json();
@@ -44,7 +43,6 @@ export default function Signup() {
           email: "",
           password: "",
           confirmPassword: "",
-          phone: "",
         });
 
         navigate("/"); // ✅ Redirect to login page
@@ -86,10 +84,7 @@ export default function Signup() {
           <label htmlFor="exampleInputPassword1" className="form-label">Confirm Password</label>
           <input value={formData.confirmPassword} onChange={handleChange} type="password" className="form-control" name="confirmPassword" />
         </div>
-        <div className="mb-3">
-          <label htmlFor="tel" className="form-label">Phone no. </label>
-          <input value={formData.phone} onChange={handleChange} type="tel" name="phone" className="form-control"/>
-        </div>
+        
 
         <div className="d-grid gap-2">
           <button className="btn btn-primary" type="submit" href="/">Signup</button>

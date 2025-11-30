@@ -9,7 +9,6 @@ form.addEventListener("submit", async (e) => {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmpassword").value;
-  const phone = document.querySelector("input[name='phone']").value.trim();
 
   // Basic validation
   if (password !== confirmPassword) {
@@ -18,7 +17,7 @@ form.addEventListener("submit", async (e) => {
   }
 
   // ✅ Create user object
-  const user = { firstName, lastName, email, password, phone };
+  const user = { firstName, lastName, email, password};
 
   try {
     const response = await fetch("http://localhost:5000/signup", {

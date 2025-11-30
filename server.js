@@ -33,8 +33,8 @@ app.post("/signup", async (req, res) => {
   }
 
   try {
-    const { firstName, lastName, email, password, phone } = req.body;
-    console.log("Extracted:", { firstName, lastName, email, password, phone });
+    const { firstName, lastName, email, password } = req.body;
+    console.log("Extracted:", { firstName, lastName, email, password });
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -47,7 +47,7 @@ app.post("/signup", async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ firstName, lastName, email, password: hashedPassword, phone });
+    const newUser = new User({ firstName, lastName, email, password: hashedPassword });
 
     const savedUser = await newUser.save();
     console.log("Saved user:", savedUser);
