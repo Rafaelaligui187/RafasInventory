@@ -16,16 +16,16 @@ import History from './pages/History'
 import Dashboard from './pages/Dashboard'
 import Accountmanage from './pages/accountmanage'
 
-// Layout component to handle Navbar visibility
+// Layout component to handle Navbar & Footer visibility
 const Layout = ({ children }) => {
   const location = useLocation()
-  const hideNavbar = location.pathname === '/' || location.pathname === '/signup' // hide on Login and Signup
+  const hideLayout = location.pathname === '/' || location.pathname === '/signup'
 
   return (
     <>
-      {!hideNavbar && <Navbar />}
+      {!hideLayout && <Navbar />}
       {children}
-      <Footer />
+      {!hideLayout && <Footer />}
     </>
   )
 }
@@ -35,10 +35,10 @@ const App = () => {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<Login />} />       
+          <Route path="/" element={<Login />} />        
+          <Route path="/signup" element={<Signup />} /> 
           <Route path="/products" element={<Products />} />   
           <Route path="/about" element={<About />} />  
-          <Route path="/signup" element={<Signup />} /> 
           <Route path="/reports" element={<Reports />} />
           <Route path="/history" element={<History />} />
           <Route path="/accountmanage" element={<Accountmanage />} />   

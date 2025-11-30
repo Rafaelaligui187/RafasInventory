@@ -59,6 +59,31 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// LOGIN route
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
+    }
+
+    // Compare password with bcrypt
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: "Incorrect password" });
+    }
+
+    // Login successful
+    res.json({ success: true, message: "Login successful!" });
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ success: false, message: "Login failed" });
+  }
+});
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
