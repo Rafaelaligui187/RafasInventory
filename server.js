@@ -77,7 +77,17 @@ app.post("/login", async (req, res) => {
     }
 
     // Login successful
-    res.json({ success: true, message: "Login successful!" });
+    res.json({  // Send user info to frontend (without password)
+      success: true,
+      message: "Login successful!",
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
+
+    
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ success: false, message: "Login failed" });

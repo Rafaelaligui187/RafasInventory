@@ -3,39 +3,30 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const { email, password } = formData;
-
     try {
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(formData),
       });
-
       const data = await response.json();
 
       if (data.success) {
-        // ✅ Redirect to Products page after successful login
-        navigate("/products");
+        localStorage.setItem("user", JSON.stringify(data.user)); // store user
+        navigate("/products"); // redirect after login
       } else {
         alert(data.message);
       }
     } catch (error) {
-      console.error("Error connecting to server:", error);
+      console.error(error);
       alert("Login failed.");
     }
   };
