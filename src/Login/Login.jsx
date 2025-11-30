@@ -4,10 +4,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 export default function Login() {
   return (
    <div className="container mt-5">
-
+    <title>Login</title>
       {/* Header Section */}
       <div className="text-center mb-5">
-        <h1 className="fw-bold">Welcome to Rafa Inventory</h1>
+        <h1 className="fw-bold">Welcome to Rafas Inventory</h1>
         <p className="text-muted">
           A simple and efficient way to manage your products.
         </p>
@@ -26,6 +26,7 @@ export default function Login() {
         <div class="d-grid gap-2">
           <button class="btn btn-primary" type="submit">Login</button>
           <p>Create account?<a href="/signup"> Signup</a></p>
+          <p>Forgot password?<a href="/"> Work in progress</a></p>
         </div>
 
       </form>

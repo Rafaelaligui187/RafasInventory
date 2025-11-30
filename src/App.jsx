@@ -21,7 +21,7 @@ const App = () => {
       {/* Page content */}
       <div> 
         <Routes>
-          <Route path="/login" element={<Login />} />       
+          <Route path="/" element={<Login />} />       
           <Route path="/home" element={<Home />} />   
           <Route path="/about" element={<About />} />  
           <Route path="/signup" element={<Signup />} /> 
