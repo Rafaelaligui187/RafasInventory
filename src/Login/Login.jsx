@@ -17,7 +17,12 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const data = await response.json();
+
+      // ✅ Save user info to localStorage
+      localStorage.setItem("userId", data.user._id);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       if (data.success) {
         localStorage.setItem("user", JSON.stringify(data.user)); // store user

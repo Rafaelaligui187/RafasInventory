@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";   // ✅ ADD THIS
 import User from "./models/User.js";
+import productRoutes from "./routes/productRoutes.js";
 
 dotenv.config({ path: ".env.local" });
 
@@ -23,6 +24,8 @@ mongoose
 app.get("/", (req, res) => {
   res.send("Backend connected to MongoDB Atlas!");
 });
+
+
 
 // SIGNUP route
 app.post("/signup", async (req, res) => {
@@ -81,6 +84,7 @@ app.post("/login", async (req, res) => {
       success: true,
       message: "Login successful!",
       user: {
+        _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -95,8 +99,14 @@ app.post("/login", async (req, res) => {
 });
 
 
+// Product routes
+app.use("/api/products", productRoutes);
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
+
+

@@ -1,75 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Products() {
-  const dummyProducts = [
-    {
-      id: 1,
-      name: "Wireless Mouse",
-      price: "₱350",
-      stock: 25,
-      image: "https://contents.mediadecathlon.com/p1574676/k$3be5882a1bce6c60c24269eb54c6af5f/riverside-100-hybrid-bike-matte-black-riverside-8550625.jpg?f=1920x0&format=auto"
-    },
-    {
-      id: 1,
-      name: "Wireless Mouse",
-      price: "₱350",
-      stock: 25,
-      image: "https://contents.mediadecathlon.com/p1574676/k$3be5882a1bce6c60c24269eb54c6af5f/riverside-100-hybrid-bike-matte-black-riverside-8550625.jpg?f=1920x0&format=auto"
-    },
-    {
-      id: 1,
-      name: "Wireless Mouse",
-      price: "₱350",
-      stock: 25,
-      image: "https://contents.mediadecathlon.com/p1574676/k$3be5882a1bce6c60c24269eb54c6af5f/riverside-100-hybrid-bike-matte-black-riverside-8550625.jpg?f=1920x0&format=auto"
-    },
-    {
-      id: 1,
-      name: "Wireless Mouse",
-      price: "₱350",
-      stock: 25,
-      image: "https://contents.mediadecathlon.com/p1574676/k$3be5882a1bce6c60c24269eb54c6af5f/riverside-100-hybrid-bike-matte-black-riverside-8550625.jpg?f=1920x0&format=auto"
-    },
-    {
-      id: 1,
-      name: "Wireless Mouse",
-      price: "₱350",
-      stock: 25,
-      image: "https://contents.mediadecathlon.com/p1574676/k$3be5882a1bce6c60c24269eb54c6af5f/riverside-100-hybrid-bike-matte-black-riverside-8550625.jpg?f=1920x0&format=auto"
-    },
-    {
-      id: 1,
-      name: "Wireless Mouse",
-      price: "₱350",
-      stock: 25,
-      image: "https://contents.mediadecathlon.com/p1574676/k$3be5882a1bce6c60c24269eb54c6af5f/riverside-100-hybrid-bike-matte-black-riverside-8550625.jpg?f=1920x0&format=auto"
-    },
-    
+  const [products, setProducts] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
-  ];
+  // FORM VALUES
+  const [form, setForm] = useState({
+    name: "",
+    price: "",
+    stock: "",
+    image: ""
+  });
+
+  const userId = localStorage.getItem("userId");
+
+  // FETCH PRODUCTS
+  const loadProducts = async () => {
+    const res = await axios.get(`http://localhost:5000/api/products/${userId}`);
+    setProducts(res.data);
+  };
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  // HANDLE INPUT CHANGE
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // ADD PRODUCT
+  const handleAddProduct = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/products/add", {
+        ...form,
+        ownedBy: userId
+      });
+
+      setShowModal(false);
+      loadProducts();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="container mt-5">
+
       <h2 className="text-center mb-4">Product List</h2>
 
-      <button type="button" class="btn btn-primary btn-lg mb-5">Add product</button>
+      <button
+        type="button"
+        className="btn btn-primary btn-lg mb-4"
+        onClick={() => setShowModal(true)}
+      >
+        Add Product
+      </button>
 
-      {/* search bar */}
-      <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-            <button class="btn bg-success text-light" type="submit">Search</button>
-          </form>
-        </div>
-      </nav>
-
-
+      {/* PRODUCT GRID */}
       <div className="row">
-        {dummyProducts.map((product) => (
-          <div className="col-md-4 mb-4" key={product.id}>
-            
+        {products.map((product) => (
+          <div className="col-md-4 mb-4" key={product._id}>
             <div className="card shadow-sm">
               <img
                 src={product.image}
@@ -78,16 +71,72 @@ export default function Products() {
               />
               <div className="card-body">
                 <h5 className="card-title">{product.name}</h5>
-                <p className="card-text">Price: {product.price}</p>
-                <p className="card-text">Stock: {product.stock}</p>
-                <button className="btn w-100 mb-1 text-light bg-primary">View Details</button>
-                <button className="btn w-100 mb-1 text-light bg-secondary">Edit</button>
-                <button className="btn w-100 mb-1 text-light bg-danger">Delete</button>
+                <p>Price: ₱{product.price}</p>
+                <p>Stock: {product.stock}</p>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* ADD PRODUCT MODAL */}
+      {showModal && (
+        <div
+          className="modal fade show"
+          style={{
+            display: "block",
+            background: "rgba(0,0,0,0.5)"
+          }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+
+              <div className="modal-header">
+                <h5 className="modal-title">Add New Product</h5>
+                <button className="btn-close" onClick={() => setShowModal(false)}></button>
+              </div>
+
+              <div className="modal-body">
+                <input
+                  name="name"
+                  placeholder="Product name"
+                  className="form-control mb-2"
+                  onChange={handleChange}
+                />
+                <input
+                  name="price"
+                  placeholder="Price"
+                  className="form-control mb-2"
+                  onChange={handleChange}
+                />
+                <input
+                  name="stock"
+                  placeholder="Stock"
+                  className="form-control mb-2"
+                  onChange={handleChange}
+                />
+                <input
+                  name="image"
+                  placeholder="Image URL"
+                  className="form-control mb-2"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
+                <button className="btn btn-primary" onClick={handleAddProduct}>
+                  Save Product
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
