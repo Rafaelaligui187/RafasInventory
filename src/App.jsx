@@ -16,7 +16,10 @@ import History from './pages/History'
 import Dashboard from './pages/Dashboard'
 import Accountmanage from './pages/accountmanage'
 
-// Layout component to handle Navbar & Footer visibility
+// NEW: Private Route
+import PrivateRoute from "./PrivateRoute"
+
+// Layout component to show/hide Navbar & Footer
 const Layout = ({ children }) => {
   const location = useLocation()
   const hideLayout = location.pathname === '/' || location.pathname === '/signup'
@@ -35,14 +38,64 @@ const App = () => {
     <Router>
       <Layout>
         <Routes>
-          <Route path="/" element={<Login />} />        
-          <Route path="/signup" element={<Signup />} /> 
-          <Route path="/products" element={<Products />} />   
-          <Route path="/about" element={<About />} />  
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/accountmanage" element={<Accountmanage />} />   
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Public routes */}
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Protected routes */}
+          <Route 
+            path="/products" 
+            element={
+              <PrivateRoute>
+                <Products />
+              </PrivateRoute>
+            }
+          />
+
+          <Route 
+            path="/about" 
+            element={
+              <PrivateRoute>
+                <About />
+              </PrivateRoute>
+            }
+          />
+
+          <Route 
+            path="/reports" 
+            element={
+              <PrivateRoute>
+                <Reports />
+              </PrivateRoute>
+            }
+          />
+
+          <Route 
+            path="/history" 
+            element={
+              <PrivateRoute>
+                <History />
+              </PrivateRoute>
+            }
+          />
+
+          <Route 
+            path="/accountmanage" 
+            element={
+              <PrivateRoute>
+                <Accountmanage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route 
+            path="/dashboard" 
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Layout>
     </Router>
