@@ -63,7 +63,7 @@ export default function Products() {
       <div className="row">
         {products.map((product) => (
           <div className="col-md-4 mb-4" key={product._id}>
-            <div className="card shadow-sm">
+            <div className="card shadow-lg">
               <img
                 src={product.image}
                 className="card-img-top"
@@ -71,8 +71,11 @@ export default function Products() {
               />
               <div className="card-body">
                 <h5 className="card-title">{product.name}</h5>
-                <p>Price: ₱{product.price}</p>
+                <p>Price: ₱ {product.price}</p>
                 <p>Stock: {product.stock}</p>
+                <button className="btn btn-primary w-100 mb-1">View Product</button>
+                <button className="btn w-100 mb-1 text-light" style={{background: '#55AB79'}}>Edit Product</button>
+                <button className="btn btn-danger w-100 mb-1">Delete Product</button>
               </div>
             </div>
           </div>
