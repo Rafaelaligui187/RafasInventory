@@ -18,7 +18,7 @@ export default function Navbar() {
 
   return (
     <nav className="navbar bg-body-tertiary fixed-top">
-      <div className="container-fluid bg-dark">
+      <div className="container-fluid bg-dark ">
         <a className="navbar-brand text-light" href="#">Rafas Inventory</a>
         <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon bg-light"></span>
@@ -36,7 +36,7 @@ export default function Navbar() {
               height="60"
               className="rounded-circle"
             />
-            {user && <p className="text-dark mb-0">{user.firstName} {user.lastName}</p>}
+            {user && <p className="text-dark mb-0 text-bold">{user.firstName} {user.lastName}</p>}
           </div>
           <div className="offcanvas-body">
             <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
