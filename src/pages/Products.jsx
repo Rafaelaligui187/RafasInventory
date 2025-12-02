@@ -11,7 +11,8 @@ export default function Products() {
     name: "",
     price: "",
     stock: "",
-    image: ""
+    image: "",
+    productDescription: "",
   });
 
   const userId = localStorage.getItem("userId");
@@ -108,12 +109,14 @@ export default function Products() {
                 />
                 <input
                   name="price"
+                  type="number"
                   placeholder="Price"
                   className="form-control mb-2"
                   onChange={handleChange}
                 />
                 <input
                   name="stock"
+                  type="number"
                   placeholder="Stock"
                   className="form-control mb-2"
                   onChange={handleChange}
@@ -124,7 +127,18 @@ export default function Products() {
                   className="form-control mb-2"
                   onChange={handleChange}
                 />
+                <textarea
+                name="productDescription"
+                placeholder="Product Description"
+                className="form-control mb-2"
+                onChange={handleChange}
+              ></textarea>
+                
+    
+
+                
               </div>
+              
 
               <div className="modal-footer">
                 <button className="btn btn-secondary" onClick={() => setShowModal(false)}>

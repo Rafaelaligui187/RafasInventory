@@ -5,6 +5,7 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   stock: { type: Number, required: true },
   image: { type: String, required: true },
+  productDescription: { type: String, default: "" },
   ownedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
 });
 
