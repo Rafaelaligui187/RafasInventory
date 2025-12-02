@@ -36,4 +36,32 @@ router.get("/:ownerId", async (req, res) => {
   }
 });
 
+///EDIT PRODUCT
+router.put("/edit/:id", async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    res.json({ message: "Product updated!", product: updatedProduct });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating product", error });
+  }
+});
+
+// DELETE PRODUCT
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ message: "Product deleted!" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting product", error });
+  }
+});
+
+
+
+
+
 export default router;
