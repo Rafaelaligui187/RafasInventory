@@ -19,6 +19,23 @@ export default function Products() {
 
   const userId = localStorage.getItem("userId");
 
+////IMGBB UPLOAD FUNCTION
+  const uploadImageToImgBB = async (file) => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const res = await fetch(
+    `https://api.imgbb.com/1/upload?key=4b59f8977ddecb0dae921ba1d6a3654d`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  const data = await res.json();
+  return data.data.url; // returns uploaded image URL
+};
+
   // FETCH PRODUCTS
   const loadProducts = async () => {
     try {
@@ -34,9 +51,14 @@ export default function Products() {
   }, []);
 
   // HANDLE INPUT CHANGE
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
+  if (e.target.name === "image" && e.target.files[0]) {
+    const uploadedUrl = await uploadImageToImgBB(e.target.files[0]);
+    setForm({ ...form, image: uploadedUrl });
+  } else {
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  }
+};
 
   // ADD OR UPDATE PRODUCT
   const handleSaveProduct = async () => {
@@ -94,6 +116,11 @@ export default function Products() {
     setViewProduct(product);
   };
 
+  
+
+
+
+
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Product List</h2>
@@ -123,7 +150,7 @@ export default function Products() {
                 <button className="btn w-100 mb-1 text-light" style={{backgroundColor: '#181818ff'}} onClick={() => handleViewProduct(product)}>
                   View Product
                 </button>
-                <button className="btn w-100 mb-1 text-light" style={{backgroundColor: '#181818ff'}} onClick={() => handleEditProduct(product)}>
+                <button className="btn w-100 mb-1 text-light" style={{backgroundColor: '#646464ff'}} onClick={() => handleEditProduct(product)}>
                   Edit
                 </button>
                 <button className="btn w-100 mb-1 text-light" style={{backgroundColor: '#ff3e3eff'}} onClick={() => handleDeleteProduct(product._id)}>
@@ -170,12 +197,14 @@ export default function Products() {
                   onChange={handleChange}
                 />
                 <input
-                  name="image"
-                  placeholder="Image URL"
-                  className="form-control mb-2"
-                  value={form.image}
-                  onChange={handleChange}
+                type="file"
+                name="image"
+                className="form-control mb-2"
+                onChange={handleChange}
                 />
+                {form.image && (
+                  <img src={form.image} alt="Preview" className="img-fluid mb-2" />
+                )}
                 <textarea
                   name="productDescription"
                   placeholder="Product Description"
