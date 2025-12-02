@@ -14,6 +14,7 @@ router.post("/add", async (req, res) => {
       stock,
       image,
       ownedBy,
+      productDescription: req.body.productDescription || "",
     });
 
     await product.save();
