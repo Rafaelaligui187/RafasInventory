@@ -8,6 +8,7 @@ export default function Products() {
   const [isEditing, setIsEditing] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [viewProduct, setViewProduct] = useState(null); // ✅ View modal
+  const [searchQuery, setSearchQuery] = useState("");///For Searching Product
 
   const [form, setForm] = useState({
     name: "",
@@ -116,15 +117,25 @@ export default function Products() {
     setViewProduct(product);
   };
 
-  
-
-
+  const filteredProducts = products.filter(p =>
+  p.name.toLowerCase().includes(searchQuery.toLowerCase())
+);
 
 
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Product List</h2>
-      <input class="form-control me-2 mb-4" type="search" placeholder="Search" aria-label="Search"/>
+      {/* SEARCH PRODUCT AND ADD PRODUCT BUTTON */}
+      <input
+        className="form-control me-2 mb-4"
+        style={{borderColor: 'black'}}
+        type="search"
+        color="black"
+        placeholder="Search Products"
+        aria-label="Search"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       <button
         className="btn btn-lg mb-4 text-light"
         style={{backgroundColor: '#181818ff'}}
@@ -137,12 +148,10 @@ export default function Products() {
         Add Product
       </button>
       
-
       
-
       {/* PRODUCT GRID */}
       <div className="row">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <div className="col-md-4 mb-4" key={product._id}>
             <div className="card shadow-lg">
               <img src={product.image} className="card-img-top" alt={product.name} />
