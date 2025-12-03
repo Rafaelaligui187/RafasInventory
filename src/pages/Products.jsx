@@ -133,8 +133,9 @@ export default function Products() {
         borderBottom: "2px solid #ddd"
       }}
     >
-    <h2 className="text-center mb-3">Product List</h2>
+    <h2 className="text-center mt-5">Product List</h2>
 
+    {/* SEARCH PRODUCT */}
     <input
       className="form-control mb-3"
       style={{ borderColor: "black" }}
@@ -144,7 +145,7 @@ export default function Products() {
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
     />
-
+    {/* ADD PRODUCT BUTTON */}
     <button
       className="btn btn-lg mb-3 text-light w-30"
       style={{ backgroundColor: "#181818ff" }}
@@ -156,14 +157,11 @@ export default function Products() {
     >
       Add Product
     </button>
+
     <div style={{ fontSize: 20, fontWeight: "bold" }}>
       Total Products: <strong>{products.length}</strong>
-  </div>
-
-
-      
-      
-      
+    </div>
+ 
       
       {/* PRODUCT GRID */}
       

@@ -36,6 +36,8 @@ export default function About() {
 
         <h5 className="mt-3">Version</h5>
         <p>Rafas Inventory v1.0.0 (2025)</p>
+        <p>Date Created: 11/29/(2025)</p>
+        <p>Date Finished: ???</p>
       </div>
     </div>
     </>
