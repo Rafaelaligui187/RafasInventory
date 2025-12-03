@@ -168,13 +168,13 @@ export default function Products() {
       {/* PRODUCT GRID */}
       
       <div
-  className="row"
-  style={{
-    maxHeight: "70vh",
-    overflowY: "auto",
-    paddingTop: "10px"
-  }}
->
+          className="row"
+          style={{
+            maxHeight: "70vh",
+            overflowY: "auto",
+            paddingTop: "10px"
+          }}
+        >
         {filteredProducts.map((product) => (
           <div className="col-md-4 mb-4" key={product._id}>
             <div className="card shadow-lg">
@@ -199,90 +199,104 @@ export default function Products() {
       </div>
 
       {/* ADD / EDIT MODAL */}
-      {showModal && (
-        <div className="modal fade show" style={{ display: "block", background: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
+{showModal && (
+  <div
+    className="modal fade show d-flex align-items-center justify-content-center"
+    style={{ display: "flex", background: "rgba(0,0,0,0.5)", minHeight: "100vh" }}
+  >
+    <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-content">
 
-              <div className="modal-header">
-                <h5 className="modal-title">{isEditing ? "Edit Product" : "Add New Product"}</h5>
-                <button className="btn-close" onClick={() => setShowModal(false)}></button>
-              </div>
-
-              <form
-                onSubmit={(e) => { 
-                  e.preventDefault();
-                  handleSaveProduct();
-                }}
-              >
-                <div className="modal-body">
-                  <input
-                    name="name"
-                    placeholder="Product name"
-                    className="form-control mb-2"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                  />
-
-                  <input
-                    name="price"
-                    type="number"
-                    placeholder="Price"
-                    className="form-control mb-2"
-                    value={form.price}
-                    onChange={handleChange}
-                    required
-                  />
-
-                  <input
-                    name="stock"
-                    type="number"
-                    placeholder="Stock"
-                    className="form-control mb-2"
-                    value={form.stock}
-                    onChange={handleChange}
-                    required
-                  />
-
-                  <input
-                    type="file"
-                    name="image"
-                    className="form-control mb-2"
-                    onChange={handleChange}
-                    required={!isEditing}
-                  />
-
-                  {form.image && (
-                    <img src={form.image} alt="Preview" className="img-fluid mb-2" />
-                  )}
-
-                  <textarea
-                    name="productDescription"
-                    placeholder="Product Description"
-                    className="form-control mb-2"
-                    value={form.productDescription}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="modal-footer">
-                  <button className="btn btn-secondary" type="button" onClick={() => setShowModal(false)}>
-                    Cancel
-                  </button>
-
-                  {/* SUBMIT BUTTON MUST BE INSIDE THE FORM */}
-                  <button className="btn text-light" style={{ backgroundColor: "#181818ff" }} type="submit">
-                    {isEditing ? "Update Product" : "Save Product"}
-                  </button>
-                </div>
-              </form>
-
-            </div>
-          </div>
+        <div className="modal-header">
+          <h5 className="modal-title">{isEditing ? "Edit Product" : "Add New Product"}</h5>
+          <button className="btn-close" onClick={() => setShowModal(false)}></button>
         </div>
-      )}
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSaveProduct();
+          }}
+        >
+          <div className="modal-body text-center">
+            Product name:
+            <input
+              name="name"
+              placeholder="Product name"
+              className="form-control mb-2"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+
+            Price:
+            <input
+              name="price"
+              type="number"
+              placeholder="Price"
+              className="form-control mb-2"
+              value={form.price}
+              onChange={handleChange}
+              required
+            />
+
+            Stock:
+            <input
+              name="stock"
+              type="number"
+              placeholder="Stock"
+              className="form-control mb-2"
+              value={form.stock}
+              onChange={handleChange}
+              required
+            />
+
+            Product Image
+            <input
+              type="file"
+              name="image"
+              className="form-control mb-2"
+              onChange={handleChange}
+              required={!isEditing}
+            />
+
+            {form.image && (
+              <img src={form.image} alt="Preview" className="img-fluid mb-2" />
+            )}
+
+            Product Description:
+            <textarea
+              name="productDescription"
+              placeholder="Product Description"
+              className="form-control mb-2"
+              value={form.productDescription}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="modal-footer justify-content-center">
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={() => setShowModal(false)}
+            >
+              Cancel
+            </button>
+
+            <button
+              className="btn text-light"
+              style={{ backgroundColor: "#181818ff" }}
+              type="submit"
+            >
+              {isEditing ? "Update Product" : "Save Product"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* VIEW PRODUCT MODAL */}
       {viewProduct && (

@@ -17,18 +17,39 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="navbar bg-body-tertiary fixed-top">
-      <div className="container-fluid bg-dark ">
-        <a className="navbar-brand text-light" href="#">Rafas Inventory</a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon bg-light"></span>
+    <nav className="navbar navbar-dark bg-dark fixed-top">
+      <div className="container-fluid">
+        <a className="navbar-brand text-light" href="#">
+          Rafas Inventory
+        </a>
+
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar"
+        >
+          <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+
+        <div
+          className="offcanvas offcanvas-end text-bg-dark"
+          tabIndex="-1"
+          id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel"
+        >
           <div className="offcanvas-header">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-            <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button
+              type="button"
+              className="btn-close btn-close-white"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
           </div>
-          <div style={{ textAlign: "center", marginBottom: "10px" }}>
+
+          <div className="text-center mb-3">
             <img
               src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
               alt="User Icon"
@@ -36,23 +57,35 @@ export default function Navbar() {
               height="60"
               className="rounded-circle"
             />
-            {user && <p className="text-dark mb-0 text-bold">{user.firstName} {user.lastName}</p>}
+
+            {user && (
+              <p className="text-light fw-bold mt-2">
+                {user.firstName} {user.lastName}
+              </p>
+            )}
           </div>
+
           <div className="offcanvas-body">
-            <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-              <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/products">Products management</a>
-                <a className="nav-link active" aria-current="page" href="/accountmanage">Manage account</a>
-                <a className="nav-link active" aria-current="page" href="/history">Stock History</a>
-                <a className="nav-link active" aria-current="page" href="/dashboard">Dashboard</a>
-                <a className="nav-link active" aria-current="page" href="/reports">Reports</a>
-                <a className="nav-link active" aria-current="page" href="/about">About</a>
-              </li>
+            <ul className="navbar-nav text-light">
+              <li className="nav-item"><a className="nav-link" href="/products">Products Management</a></li>
+              <li className="nav-item"><a className="nav-link" href="/accountmanage">Manage Account</a></li>
+              <li className="nav-item"><a className="nav-link" href="/history">Stock History</a></li>
+              <li className="nav-item"><a className="nav-link" href="/dashboard">Dashboard</a></li>
+              <li className="nav-item"><a className="nav-link" href="/reports">Reports</a></li>
+              <li className="nav-item"><a className="nav-link" href="/about">About</a></li>
             </ul>
+
+            <button
+              onClick={handleLogout}
+              className="btn btn-danger w-100 mt-4"
+              type="button"
+            >
+              Log out
+            </button>
           </div>
-          <button onClick={handleLogout} className="btn btn-outline-danger mt-3" type="button">Log out</button>
         </div>
       </div>
     </nav>
+
   );
 }

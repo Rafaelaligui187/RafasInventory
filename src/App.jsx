@@ -28,7 +28,9 @@ const Layout = ({ children }) => {
     <>
       {!hideLayout && <Navbar />}
       {children}
-      {!hideLayout && <Footer />}
+      
+      {/* IF U WANT TO ENABLE FOOTER */}
+      {/* {!hideLayout && <Footer />} */}      
     </>
   )
 }
