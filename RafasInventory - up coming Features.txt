@@ -1,0 +1,51 @@
+
+
+## **RafasInventory – Simple Version (Phase 1)**
+
+### **Pages & Features**
+
+1. **Login Page**
+
+   * User login
+   * Basic role distinction (Admin / Staff optional)
+
+2. **Dashboard Page**
+
+   * Overview:
+
+     * Total products
+     * Total stock quantity
+     * Recent stock activity
+     * Low stock alerts (basic visual, like a red warning)
+
+3. **Products Page**
+
+   * Add new products
+   * Edit/delete products
+   * Product details:
+
+     * Name
+     * SKU / Barcode
+     * Category
+     * Quantity
+     * (Optional: product image)
+   * Basic search (by name or SKU)
+
+4. **Stock History Page**
+
+   * Record stock in/out
+   * Show simple history table (date, product, quantity, type of action)
+
+5. **Reports Page**
+
+   * Export current inventory to CSV or Excel
+
+---
+
+### **Optional Extras (Simple)**
+
+* Small alert when stock is low (e.g., highlight in red)
+* Simple navbar with links: Dashboard | Products | Stock History | Reports | Logout
+
+---
+

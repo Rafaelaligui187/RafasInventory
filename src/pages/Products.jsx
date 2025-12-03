@@ -48,7 +48,9 @@ export default function Products() {
   };
 
   useEffect(() => {
-    loadProducts();
+    (async () => {
+      await loadProducts();
+    })();
   }, []);
 
   // HANDLE INPUT CHANGE
@@ -123,34 +125,56 @@ export default function Products() {
 
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Product List</h2>
-      {/* SEARCH PRODUCT AND ADD PRODUCT BUTTON */}
-      <input
-        className="form-control me-2 mb-4"
-        style={{borderColor: 'black'}}
-        type="search"
-        color="black"
-        placeholder="Search Products"
-        aria-label="Search"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <button
-        className="btn btn-lg mb-4 text-light"
-        style={{backgroundColor: '#181818ff'}}
-        onClick={() => {
-          setForm({ name: "", price: "", stock: "", image: "", productDescription: "" });
-          setIsEditing(false);
-          setShowModal(true);
-        }}
-      >
-        Add Product
-      </button>
+    
+    <div
+      className="sticky-top bg-white pt-3 pb-3"
+      style={{
+        zIndex: 1000,
+        borderBottom: "2px solid #ddd"
+      }}
+    >
+    <h2 className="text-center mb-3">Product List</h2>
+
+    <input
+      className="form-control mb-3"
+      style={{ borderColor: "black" }}
+      type="search"
+      placeholder="Search Products"
+      aria-label="Search"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+
+    <button
+      className="btn btn-lg mb-3 text-light w-30"
+      style={{ backgroundColor: "#181818ff" }}
+      onClick={() => {
+        setForm({ name: "", price: "", stock: "", image: "", productDescription: "" });
+        setIsEditing(false);
+        setShowModal(true);
+      }}
+    >
+      Add Product
+    </button>
+    <div style={{ fontSize: 20, fontWeight: "bold" }}>
+      Total Products: <strong>{products.length}</strong>
+  </div>
+
+
+      
+      
       
       
       {/* PRODUCT GRID */}
-      <div className="row">
+      
+      <div
+  className="row"
+  style={{
+    maxHeight: "70vh",
+    overflowY: "auto",
+    paddingTop: "10px"
+  }}
+>
         {filteredProducts.map((product) => (
           <div className="col-md-4 mb-4" key={product._id}>
             <div className="card shadow-lg">
@@ -262,7 +286,7 @@ export default function Products() {
 
       {/* VIEW PRODUCT MODAL */}
       {viewProduct && (
-        <div className="modal fade show" style={{ display: "block", background: "rgba(0,0,0,0.5)" }}>
+        <div className="modal fade show" style={{ display: "block", background: "rgba(0,0,0,0.5)"}}>
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
