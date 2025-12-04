@@ -49,6 +49,9 @@ export default function Login() {
         className="w-50 mx-auto border p-4 rounded shadow bg-blue-light"
         onSubmit={handleSubmit}
       >
+        <div className="text-center mb-5">
+          <h1 className="fw-bold">Log in</h1>
+        </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email address</label>
           <input
@@ -76,7 +79,7 @@ export default function Login() {
         </div>
 
         <div className="d-grid gap-2">
-          <button className="btn btn-primary" type="submit">Login</button>
+          <button className="btn bg-dark text-light" type="submit">Login</button>
           <p>Create account? <a href="/signup">Signup</a></p>
           <p>Forgot password? <a href="/">Work in progress</a></p>
         </div>

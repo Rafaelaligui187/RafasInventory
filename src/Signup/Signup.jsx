@@ -63,8 +63,11 @@ export default function Signup() {
           A simple and efficient way to manage your products.
         </p>
       </div>
-
+      
       <form className="w-50 mx-auto border p-4 rounded shadow bg-blue-light" onSubmit={handleSubmit}>
+        <div className="text-center mb-5">
+          <h1 className="fw-bold">Sign up</h1>
+        </div>
         <div className="mb-3">
           <label htmlFor="fullname" className="form-label">Firstname and lastname</label>
         </div>
@@ -87,7 +90,7 @@ export default function Signup() {
         
 
         <div className="d-grid gap-2">
-          <button className="btn btn-primary" type="submit" href="/">Signup</button>
+          <button className="btn bg-dark text-light" type="submit" href="/">Create Account</button>
           <p>Already have an account?<a href="/"> Login</a></p>
         </div>
       </form>

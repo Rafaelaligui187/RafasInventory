@@ -6,15 +6,29 @@ const router = express.Router();
 // ADD PRODUCT
 router.post("/add", async (req, res) => {
   try {
-    const { name, price, stock, image, ownedBy } = req.body;
+    const { name, price, stock, image, ownedBy, productDescription } = req.body;
+
+    // --- AUTO SKU GENERATION ---
+    // 1. Prefix = first 3 letters of product name
+    const prefix = name.substring(0, 3).toUpperCase();
+
+    // 2. Count existing products with same prefix (same owner)
+    const count = await Product.countDocuments({
+      ownedBy: ownedBy,
+      sku: { $regex: `^${prefix}` }
+    });
+
+    // 3. Generate SKU (e.g., COC-001)
+    const sku = `${prefix}-${String(count + 1).padStart(3, "0")}`;
 
     const product = new Product({
       name,
       price,
       stock,
       image,
+      sku, // <-- AUTO GENERATED
       ownedBy,
-      productDescription: req.body.productDescription || "",
+      productDescription: productDescription || "",
     });
 
     await product.save();
@@ -36,15 +50,21 @@ router.get("/:ownerId", async (req, res) => {
   }
 });
 
-///EDIT PRODUCT
+
+// EDIT PRODUCT (SKU SHOULD NOT CHANGE)
 router.put("/edit/:id", async (req, res) => {
   try {
+    const { sku, ...updateFields } = req.body; 
+    // Remove SKU from update so it stays permanent
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
+      { $set: updateFields },
       { new: true }
     );
+
     res.json({ message: "Product updated!", product: updatedProduct });
+
   } catch (error) {
     res.status(500).json({ message: "Error updating product", error });
   }

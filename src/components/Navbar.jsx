@@ -11,6 +11,7 @@ export default function Navbar() {
     if (storedUser) setUser(storedUser);
   }, []);
 
+  ////LOG OUT
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/"); // redirect to login page
