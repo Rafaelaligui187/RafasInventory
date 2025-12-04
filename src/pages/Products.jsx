@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Barcode from "react-barcode";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -119,8 +120,11 @@ export default function Products() {
     setViewProduct(product);
   };
 
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ///FOR SEARCH PRODUCT
+  const filteredProducts = products.filter(
+  (p) =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.sku.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -132,7 +136,7 @@ export default function Products() {
         className="form-control mb-3"
         style={{ borderColor: "black" }}
         type="search"
-        placeholder="Search Products"
+        placeholder="Search Products by Name or SKU"
         aria-label="Search"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
@@ -155,7 +159,7 @@ export default function Products() {
         Total Products: <strong>{products.length}</strong>
       </div>
 
-      {/* PRODUCT GRID */}
+      {/* PRODUCT GRID OR LIST*/}
       <div className="row" style={{ maxHeight: "70vh", overflowY: "auto", paddingTop: "10px" }}>
         {filteredProducts.map((product) => (
           <div className="col-md-4 mb-4" key={product._id}>
@@ -283,6 +287,10 @@ export default function Products() {
                 <img src={viewProduct.image} className="img-fluid mb-2" alt={viewProduct.name} />
                 <h5 className="text-center">{viewProduct.name}</h5>
                 <p style={{fontWeight: 'bold'}}>SKU: {viewProduct.sku}</p>
+                 {/* CENTERED BARCODE */}
+                <div className="d-flex justify-content-center mb-2">
+                  <Barcode value={viewProduct.sku} format="CODE128" />
+                </div>
                 <p style={{fontWeight: 'bold'}}>Price: ₱ {viewProduct.price}</p>
                 <p style={{fontWeight: 'bold'}}>Stock: {viewProduct.stock}</p>
                 <p>{viewProduct.productDescription}</p>
