@@ -56,10 +56,28 @@ export default function Products() {
     }
   };
 
+
+///////////////TO scrollable
   useEffect(() => {
-    loadProducts();
-    loadStockHistory();
-  }, []);
+  // Load products and stock history once
+  loadProducts();
+  loadStockHistory();
+}, []); // keep empty dependency so it runs only on mount
+
+// NEW useEffect: handle body scroll when modals are open
+useEffect(() => {
+  if (viewProduct || showModal || showStockModal) {
+    document.body.style.overflow = "hidden"; // disable background scroll
+  } else {
+    document.body.style.overflow = "auto"; // enable scroll again
+  }
+
+  // Cleanup when component unmounts
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [viewProduct, showModal, showStockModal]);
+
 
   // Handle product input changes
   const handleChange = async (e) => {
@@ -70,6 +88,8 @@ export default function Products() {
       setForm({ ...form, [e.target.name]: e.target.value });
     }
   };
+  //////////////////////////////////////////////END OF USE EFFECT
+
 
   // Save product
   const handleSaveProduct = async () => {
@@ -193,7 +213,7 @@ export default function Products() {
             <div className="card shadow">
               <img src={product.image} className="card-img-top" alt={product.name} />
               <div className="card-body">
-                <h5 className="card-title">{product.name}</h5>
+                <h5 className="card-title" style={{fontSize: 30}}>{product.name}</h5>
                 <p>SKU: {product.sku}</p>
                 <p>Price: ₱ {product.price}</p>
                 <p>Stock: {product.stock}</p>
@@ -312,25 +332,61 @@ export default function Products() {
       {viewProduct && (
         <div
           className="modal fade show d-flex align-items-center justify-content-center"
-          style={{ display: "flex", background: "rgba(0,0,0,0.5)", minHeight: "100vh" }}
+          style={{
+            display: "flex",
+            background: "rgba(0,0,0,0.5)",
+            minHeight: "100vh",
+            padding: "15px"
+          }}
         >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
+          <div className="modal-dialog modal-dialog-centered modal-lg">
+            <div className="modal-content d-flex flex-column" style={{ maxHeight: "90vh" }}>
+              
+              {/* Header */}
+              <div className="modal-header flex-shrink-0">
                 <h5 className="modal-title">{viewProduct.name}</h5>
                 <button className="btn-close" onClick={() => setViewProduct(null)}></button>
               </div>
-              <div className="modal-body text-center">
-                <img src={viewProduct.image} alt={viewProduct.name} className="img-fluid mb-2" />
-                <p style={{ fontWeight: "bold" }}>SKU: {viewProduct.sku}</p>
-                <div className="d-flex justify-content-center mb-2">
+
+              {/* Scrollable Body */}
+              <div
+                className="modal-body overflow-auto"
+                style={{ padding: "15px", flexGrow: 1 }}
+              >
+                <img
+                  src={viewProduct.image}
+                  alt={viewProduct.name}
+                  className="img-fluid mb-3"
+                  style={{ maxHeight: "300px", objectFit: "contain" }}
+                />
+
+                <p style={{ fontWeight: "bold", fontSize: "1.5rem" }}>{viewProduct.name}</p>
+
+                <div className="d-flex justify-content-center mb-3">
                   <Barcode value={viewProduct.sku} format="CODE128" />
                 </div>
-                <p style={{ fontWeight: "bold" }}>Price: ₱ {viewProduct.price}</p>
-                <p style={{ fontWeight: "bold" }}>Stock: {viewProduct.stock}</p>
-                <p>{viewProduct.productDescription}</p>
+
+                <p style={{ fontWeight: "bold", fontSize: 20 }}>Price: ₱ {viewProduct.price}</p>
+                <p style={{ fontWeight: "bold", fontSize: 20 }}>Stock: {viewProduct.stock}</p>
+
+                {/* Scrollable Description */}
+                <div
+                  style={{
+                    maxHeight: "200px",
+                    overflowY: "auto",
+                    padding: "10px",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    textAlign: "left",
+                    backgroundColor: "#f9f9f9"
+                  }}
+                >
+                  <p>{viewProduct.productDescription || "No description available."}</p>
+                </div>
               </div>
-              <div className="modal-footer justify-content-center">
+
+              {/* Footer */}
+              <div className="modal-footer flex-shrink-0 justify-content-center">
                 <button className="btn btn-secondary" onClick={() => setViewProduct(null)}>
                   Close
                 </button>
@@ -339,6 +395,8 @@ export default function Products() {
           </div>
         </div>
       )}
+
+
 
       {/* Stock Modal */}
       {showStockModal && (

@@ -1,5 +1,7 @@
 import express from "express";
 import Product from "../models/Product.js";
+import StockHistory from "../models/StockHistory.js";
+
 
 const router = express.Router();
 
@@ -9,16 +11,11 @@ router.post("/add", async (req, res) => {
     const { name, price, stock, image, ownedBy, productDescription } = req.body;
 
     // --- AUTO SKU GENERATION ---
-    // 1. Prefix = first 3 letters of product name
     const prefix = name.substring(0, 3).toUpperCase();
-
-    // 2. Count existing products with same prefix (same owner)
     const count = await Product.countDocuments({
       ownedBy: ownedBy,
       sku: { $regex: `^${prefix}` }
     });
-
-    // 3. Generate SKU (e.g., COC-001)
     const sku = `${prefix}-${String(count + 1).padStart(3, "0")}`;
 
     const product = new Product({
@@ -26,18 +23,29 @@ router.post("/add", async (req, res) => {
       price,
       stock,
       image,
-      sku, // <-- AUTO GENERATED
+      sku,
       ownedBy,
       productDescription: productDescription || "",
     });
 
     await product.save();
+
+    // ✅ AUTO STOCK HISTORY ENTRY WHEN PRODUCT IS CREATED
+    await StockHistory.create({
+      productId: product._id,
+      productName: product.name,
+      quantity: stock,
+      action: "IN",
+      ownedBy: ownedBy
+    });
+
     res.json({ message: "Product saved!", product });
 
   } catch (error) {
     res.status(500).json({ message: "Error saving product", error });
   }
 });
+
 
 // GET PRODUCTS BY USER ID
 router.get("/:ownerId", async (req, res) => {
