@@ -41,6 +41,7 @@ export default function StockHistory() {
           <tr>
             <th>Date</th>
             <th>Product</th>
+            <th>SKU</th>
             <th>Quantity</th>
             <th>Action</th>
           </tr>
@@ -69,6 +70,7 @@ export default function StockHistory() {
                       s.productName
                     )}
                   </td>
+                  <td>{product ? product.sku : "-"}</td>
                   <td>{s.quantity}</td>
                   <td>{s.action}</td>
                 </tr>
@@ -77,6 +79,8 @@ export default function StockHistory() {
           )}
         </tbody>
       </table>
+
+
       {/* View Product Modal */}
       {viewProduct && (
         <div
