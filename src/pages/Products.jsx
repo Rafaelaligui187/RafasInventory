@@ -215,28 +215,7 @@ export default function Products() {
         ))}
       </div>
 
-      {/* Stock History Table */}
-      <h3 className="mt-5">Stock History</h3>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {stockHistory.map((item) => (
-            <tr key={item._id}>
-              <td>{new Date(item.createdAt).toLocaleString()}</td>
-              <td>{products.find((p) => p._id === item.productId)?.name || "Deleted Product"}</td>
-              <td>{item.quantity}</td>
-              <td>{item.action}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      
 
       {/* Add/Edit Modal */}
       {showModal && (
