@@ -20,6 +20,7 @@ export default function Products() {
     stock: "",
     image: "",
     productDescription: "",
+    category: "",
   });
 
   const userId = localStorage.getItem("userId");
@@ -98,11 +99,13 @@ useEffect(() => {
         await axios.put(`http://localhost:5000/api/products/edit/${currentProductId}`, {
           ...form,
           ownedBy: userId,
+          category: form.category,
         });
       } else {
         await axios.post("http://localhost:5000/api/products/add", {
           ...form,
           ownedBy: userId,
+          category: form.category,
         });
       }
       setShowModal(false);
@@ -177,6 +180,19 @@ useEffect(() => {
       p.sku.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const categories = [
+  "Electronics",
+  "Apparel",
+  "Food & Beverages",
+  "Furniture",
+  "Stationery",
+  "Health & Beauty",
+];
+
+
+
+
+
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-3">Product List</h2>
@@ -217,6 +233,7 @@ useEffect(() => {
                 <p>SKU: {product.sku}</p>
                 <p>Price: ₱ {product.price}</p>
                 <p>Stock: {product.stock}</p>
+                <th>{product.category}</th>
                 <button className="btn btn-dark w-100 mb-1" onClick={() => handleViewProduct(product)}>
                   View
                 </button>
@@ -312,6 +329,19 @@ useEffect(() => {
                     onChange={handleChange}
                   />
                 </div>
+                {/* CATEGORY */}
+                <select
+                  name="category"
+                  className="form-control mb-2"
+                  value={form.category || ""}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat, index) => (
+                    <option key={index} value={cat}>{cat}</option>
+                  ))}
+                </select>
 
                 <div className="modal-footer justify-content-center">
                   <button className="btn btn-secondary" type="button" onClick={() => setShowModal(false)}>
@@ -368,6 +398,7 @@ useEffect(() => {
 
                 <p style={{ fontWeight: "bold", fontSize: 20 }}>Price: ₱ {viewProduct.price}</p>
                 <p style={{ fontWeight: "bold", fontSize: 20 }}>Stock: {viewProduct.stock}</p>
+                <p style={{ fontWeight: "bold", fontSize: 20 }}>Category: {viewProduct.category}</p>
 
                 {/* Scrollable Description */}
                 <div

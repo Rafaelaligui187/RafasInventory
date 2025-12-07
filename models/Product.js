@@ -7,7 +7,8 @@ const ProductSchema = new mongoose.Schema({
   image: { type: String, required: true },
   sku: { type: String, required: true }, ///SKU barcode
   productDescription: { type: String, default: "" }, // <- added
-  ownedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+  ownedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  category: { type: String, required: true }
 }, { timestamps: true });
 
 export default mongoose.model("Product", ProductSchema);

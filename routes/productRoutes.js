@@ -8,7 +8,7 @@ const router = express.Router();
 // ADD PRODUCT
 router.post("/add", async (req, res) => {
   try {
-    const { name, price, stock, image, ownedBy, productDescription } = req.body;
+    const { name, price, stock, image, category, ownedBy, productDescription } = req.body;
 
     // --- AUTO SKU GENERATION ---
     const prefix = name.substring(0, 3).toUpperCase();
@@ -26,6 +26,7 @@ router.post("/add", async (req, res) => {
       sku,
       ownedBy,
       productDescription: productDescription || "",
+      category,   
     });
 
     await product.save();
@@ -87,9 +88,5 @@ router.delete("/delete/:id", async (req, res) => {
     res.status(500).json({ message: "Error deleting product", error });
   }
 });
-
-
-
-
 
 export default router;
