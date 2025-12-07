@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";   // ✅ ADD THIS
 import User from "./models/User.js";
 import productRoutes from "./routes/productRoutes.js";
+import stockHistoryRoutes from "./routes/stockHistoryRoutes.js";
 
 dotenv.config({ path: ".env.local" });
 
@@ -108,5 +109,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
 
-
-
+////FOR STUCK HISTORY
+app.use("/api/stockHistory", stockHistoryRoutes);

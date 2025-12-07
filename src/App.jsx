@@ -12,7 +12,7 @@ import About from './pages/About'
 import Login from './Login/Login'
 import Signup from './Signup/Signup'
 import Reports from './pages/Reports'
-import History from './pages/History'
+import StockHistory from './pages/StockHistory'
 import Dashboard from './pages/Dashboard'
 import Accountmanage from './pages/accountmanage'
 
@@ -73,10 +73,10 @@ const App = () => {
           />
 
           <Route 
-            path="/history" 
+            path="/stockhistory" 
             element={
               <PrivateRoute>
-                <History />
+                <StockHistory />
               </PrivateRoute>
             }
           />

@@ -8,37 +8,35 @@ export default function Products() {
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
-  const [viewProduct, setViewProduct] = useState(null); // ✅ View modal
-  const [searchQuery, setSearchQuery] = useState(""); // For Searching Product
+  const [viewProduct, setViewProduct] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showStockModal, setShowStockModal] = useState(false);
+  const [stockForm, setStockForm] = useState({ quantity: 0, action: "IN", productId: null });
+  const [stockHistory, setStockHistory] = useState([]);
 
   const [form, setForm] = useState({
-    name: "",          // Product name
-    price: "",         // Product price
-    stock: "",         // Product stock
-    image: "",         // Product image
-    productDescription: "", // Product description
+    name: "",
+    price: "",
+    stock: "",
+    image: "",
+    productDescription: "",
   });
 
   const userId = localStorage.getItem("userId");
 
-  // IMGBB UPLOAD FUNCTION
+  // Upload image to imgbb
   const uploadImageToImgBB = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
-
     const res = await fetch(
       `https://api.imgbb.com/1/upload?key=4b59f8977ddecb0dae921ba1d6a3654d`,
-      {
-        method: "POST",
-        body: formData,
-      }
+      { method: "POST", body: formData }
     );
-
     const data = await res.json();
-    return data.data.url; // returns uploaded image URL
+    return data.data.url;
   };
 
-  // FETCH PRODUCTS
+  // Fetch products
   const loadProducts = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/products/${userId}`);
@@ -48,13 +46,22 @@ export default function Products() {
     }
   };
 
+  // Fetch stock history
+  const loadStockHistory = async () => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/stockHistory/${userId}`);
+      setStockHistory(res.data);
+    } catch (error) {
+      console.error("Error loading stock history:", error);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      await loadProducts();
-    })();
+    loadProducts();
+    loadStockHistory();
   }, []);
 
-  // HANDLE INPUT CHANGE
+  // Handle product input changes
   const handleChange = async (e) => {
     if (e.target.name === "image" && e.target.files[0]) {
       const uploadedUrl = await uploadImageToImgBB(e.target.files[0]);
@@ -64,21 +71,20 @@ export default function Products() {
     }
   };
 
-  // ADD OR UPDATE PRODUCT
+  // Save product
   const handleSaveProduct = async () => {
     try {
       if (isEditing) {
         await axios.put(`http://localhost:5000/api/products/edit/${currentProductId}`, {
           ...form,
-          ownedBy: userId
+          ownedBy: userId,
         });
       } else {
         await axios.post("http://localhost:5000/api/products/add", {
           ...form,
-          ownedBy: userId
+          ownedBy: userId,
         });
       }
-
       setShowModal(false);
       setForm({ name: "", price: "", stock: "", image: "", productDescription: "" });
       setIsEditing(false);
@@ -89,19 +95,20 @@ export default function Products() {
     }
   };
 
-  // DELETE PRODUCT
+  // Delete product
   const handleDeleteProduct = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await axios.delete(`http://localhost:5000/api/products/delete/${id}`);
         loadProducts();
+        loadStockHistory();
       } catch (error) {
         console.error("Error deleting product:", error);
       }
     }
   };
 
-  // OPEN EDIT MODAL
+  // Open edit modal
   const handleEditProduct = (product) => {
     setForm({
       name: product.name,
@@ -115,37 +122,57 @@ export default function Products() {
     setShowModal(true);
   };
 
-  // OPEN VIEW MODAL
-  const handleViewProduct = (product) => {
-    setViewProduct(product);
+  // Open view product modal
+  const handleViewProduct = (product) => setViewProduct(product);
+
+  // Open stock modal
+  const handleStockModal = (product) => {
+    setStockForm({ quantity: 0, action: "IN", productId: product._id });
+    setShowStockModal(true);
   };
 
-  ///FOR SEARCH PRODUCT
+  // Handle stock input change
+  const handleStockChange = (e) => setStockForm({ ...stockForm, [e.target.name]: e.target.value });
+
+  // Save stock
+  const handleSaveStock = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/stockHistory/add", {
+        ...stockForm,
+        quantity: Number(stockForm.quantity),
+        ownedBy: userId,
+      });
+      setShowStockModal(false);
+      loadProducts();
+      loadStockHistory();
+    } catch (error) {
+      console.error("Error updating stock:", error);
+    }
+  };
+
+  // Filter products by name or SKU
   const filteredProducts = products.filter(
-  (p) =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.sku.toLowerCase().includes(searchQuery.toLowerCase())
+    (p) =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.sku.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="sticky-top bg-white pt-3 pb-3" style={{ zIndex: 1000, borderBottom: "2px solid #ddd" }}>
-      <h2 className="text-center mt-5">Product List</h2>
+    <div className="container mt-5">
+      <h2 className="text-center mb-3">Product List</h2>
 
-      {/* SEARCH PRODUCT */}
+      {/* Search */}
       <input
         className="form-control mb-3"
-        style={{ borderColor: "black" }}
         type="search"
         placeholder="Search Products by Name or SKU"
-        aria-label="Search"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
 
-      {/* ADD PRODUCT BUTTON */}
+      {/* Add Product */}
       <button
-        className="btn btn-lg mb-3 text-light w-30"
-        style={{ backgroundColor: "#181818ff" }}
+        className="btn btn-dark mb-3"
         onClick={() => {
           setForm({ name: "", price: "", stock: "", image: "", productDescription: "" });
           setIsEditing(false);
@@ -155,29 +182,32 @@ export default function Products() {
         Add Product
       </button>
 
-      <div style={{ fontSize: 20, fontWeight: "bold" }}>
-        Total Products: <strong>{products.length}</strong>
+      <div style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10 }}>
+        Total Products: {products.length}
       </div>
 
-      {/* PRODUCT GRID OR LIST*/}
-      <div className="row" style={{ maxHeight: "70vh", overflowY: "auto", paddingTop: "10px" }}>
+      {/* Product Grid */}
+      <div className="row">
         {filteredProducts.map((product) => (
           <div className="col-md-4 mb-4" key={product._id}>
-            <div className="card shadow-lg">
+            <div className="card shadow">
               <img src={product.image} className="card-img-top" alt={product.name} />
               <div className="card-body">
                 <h5 className="card-title">{product.name}</h5>
                 <p>SKU: {product.sku}</p>
                 <p>Price: ₱ {product.price}</p>
                 <p>Stock: {product.stock}</p>
-                <button className="btn w-100 mb-1 text-light" style={{ backgroundColor: '#181818ff' }} onClick={() => handleViewProduct(product)}>
-                  View Product
+                <button className="btn btn-dark w-100 mb-1" onClick={() => handleViewProduct(product)}>
+                  View
                 </button>
-                <button className="btn w-100 mb-1 text-light" style={{ backgroundColor: '#646464ff' }} onClick={() => handleEditProduct(product)}>
-                  Edit Product
+                <button className="btn btn-secondary w-100 mb-1" onClick={() => handleEditProduct(product)}>
+                  Edit
                 </button>
-                <button className="btn w-100 mb-1 text-light" style={{ backgroundColor: '#ff3e3eff' }} onClick={() => handleDeleteProduct(product._id)}>
-                  Delete Product
+                <button className="btn btn-danger w-100 mb-1" onClick={() => handleDeleteProduct(product._id)}>
+                  Delete
+                </button>
+                <button className="btn btn-warning w-100" onClick={() => handleStockModal(product)}>
+                  Update Stock
                 </button>
               </div>
             </div>
@@ -185,54 +215,74 @@ export default function Products() {
         ))}
       </div>
 
-      {/* ADD / EDIT MODAL */}
+      {/* Stock History Table */}
+      <h3 className="mt-5">Stock History</h3>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stockHistory.map((item) => (
+            <tr key={item._id}>
+              <td>{new Date(item.createdAt).toLocaleString()}</td>
+              <td>{products.find((p) => p._id === item.productId)?.name || "Deleted Product"}</td>
+              <td>{item.quantity}</td>
+              <td>{item.action}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Add/Edit Modal */}
       {showModal && (
-        <div className="modal fade show d-flex align-items-center justify-content-center" style={{ display: "flex", background: "rgba(0,0,0,0.5)", minHeight: "100vh" }}>
+        <div
+          className="modal fade show d-flex align-items-center justify-content-center"
+          style={{ display: "flex", background: "rgba(0,0,0,0.5)", minHeight: "100vh" }}
+        >
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
-
               <div className="modal-header">
-                <h5 className="modal-title">{isEditing ? "Edit Product" : "Add New Product"}</h5>
+                <h5 className="modal-title">{isEditing ? "Edit Product" : "Add Product"}</h5>
                 <button className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
-
-              <form onSubmit={(e) => { e.preventDefault(); handleSaveProduct(); }}>
-                <div className="modal-body text-center">
-                  Product name:
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSaveProduct();
+                }}
+              >
+                <div className="modal-body">
                   <input
                     name="name"
-                    placeholder="Product name"
                     className="form-control mb-2"
+                    placeholder="Product Name"
                     value={form.name}
                     onChange={handleChange}
                     required
                   />
-
-                  Price:
                   <input
                     name="price"
                     type="number"
-                    placeholder="Price"
                     className="form-control mb-2"
+                    placeholder="Price"
                     value={form.price}
                     onChange={handleChange}
                     required
                   />
-
-                  Stock:
                   <input
                     name="stock"
                     type="number"
-                    placeholder="Stock"
                     className="form-control mb-2"
+                    placeholder="Stock"
                     value={form.stock}
                     onChange={handleChange}
                     required
                   />
-
-                  {/* SKU is auto-generated — no input needed */}
-
-                  Product Image
                   <input
                     type="file"
                     name="image"
@@ -240,28 +290,21 @@ export default function Products() {
                     onChange={handleChange}
                     required={!isEditing}
                   />
-
-                  {form.image && (
-                    <img src={form.image} alt="Preview" className="img-fluid mb-2" />
-                  )}
-
-                  Product Description:
+                  {form.image && <img src={form.image} alt="Preview" className="img-fluid mb-2" />}
                   <textarea
                     name="productDescription"
+                    className="form-control"
                     placeholder="Product Description"
-                    className="form-control mb-2"
                     value={form.productDescription}
                     onChange={handleChange}
-                    required
                   />
                 </div>
-
                 <div className="modal-footer justify-content-center">
                   <button className="btn btn-secondary" type="button" onClick={() => setShowModal(false)}>
                     Cancel
                   </button>
-                  <button className="btn text-light" style={{ backgroundColor: "#181818ff" }} type="submit">
-                    {isEditing ? "Update Product" : "Save Product"}
+                  <button className="btn btn-dark" type="submit">
+                    {isEditing ? "Update" : "Save"}
                   </button>
                 </div>
               </form>
@@ -270,7 +313,7 @@ export default function Products() {
         </div>
       )}
 
-      {/* VIEW PRODUCT MODAL */}
+      {/* View Product Modal */}
       {viewProduct && (
         <div
           className="modal fade show d-flex align-items-center justify-content-center"
@@ -279,32 +322,68 @@ export default function Products() {
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">View Product</h5>
+                <h5 className="modal-title">{viewProduct.name}</h5>
                 <button className="btn-close" onClick={() => setViewProduct(null)}></button>
               </div>
-              <div className="row" style={{ maxHeight: "70vh", overflowY: "auto", paddingTop: "10px" }}>
-              <div className="modal-body">
-                <img src={viewProduct.image} className="img-fluid mb-2" alt={viewProduct.name} />
-                <h5 className="text-center">{viewProduct.name}</h5>
-                <p style={{fontWeight: 'bold'}}>SKU: {viewProduct.sku}</p>
-                 {/* CENTERED BARCODE */}
+              <div className="modal-body text-center">
+                <img src={viewProduct.image} alt={viewProduct.name} className="img-fluid mb-2" />
+                <p style={{ fontWeight: "bold" }}>SKU: {viewProduct.sku}</p>
                 <div className="d-flex justify-content-center mb-2">
                   <Barcode value={viewProduct.sku} format="CODE128" />
                 </div>
-                <p style={{fontWeight: 'bold'}}>Price: ₱ {viewProduct.price}</p>
-                <p style={{fontWeight: 'bold'}}>Stock: {viewProduct.stock}</p>
+                <p style={{ fontWeight: "bold" }}>Price: ₱ {viewProduct.price}</p>
+                <p style={{ fontWeight: "bold" }}>Stock: {viewProduct.stock}</p>
                 <p>{viewProduct.productDescription}</p>
               </div>
-              </div>
               <div className="modal-footer justify-content-center">
-                <button className="btn btn-secondary" onClick={() => setViewProduct(null)}>Close</button>
+                <button className="btn btn-secondary" onClick={() => setViewProduct(null)}>
+                  Close
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-
+      {/* Stock Modal */}
+      {showStockModal && (
+        <div
+          className="modal fade show d-flex align-items-center justify-content-center"
+          style={{ display: "flex", background: "rgba(0,0,0,0.5)", minHeight: "100vh" }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Update Stock</h5>
+                <button className="btn-close" onClick={() => setShowStockModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <label>Quantity:</label>
+                <input
+                  type="number"
+                  name="quantity"
+                  className="form-control mb-2"
+                  value={stockForm.quantity}
+                  onChange={handleStockChange}
+                />
+                <label>Action:</label>
+                <select name="action" className="form-control" value={stockForm.action} onChange={handleStockChange}>
+                  <option value="IN">IN</option>
+                  <option value="OUT">OUT</option>
+                </select>
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowStockModal(false)}>
+                  Cancel
+                </button>
+                <button className="btn btn-primary" onClick={handleSaveStock}>
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

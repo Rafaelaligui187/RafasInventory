@@ -70,7 +70,7 @@ export default function Navbar() {
             <ul className="navbar-nav text-light">
               <li className="nav-item"><a className="nav-link" href="/products">Products Management</a></li>
               <li className="nav-item"><a className="nav-link" href="/accountmanage">Manage Account</a></li>
-              <li className="nav-item"><a className="nav-link" href="/history">Stock History</a></li>
+              <li className="nav-item"><a className="nav-link" href="/stockhistory">Stock History</a></li>
               <li className="nav-item"><a className="nav-link" href="/dashboard">Dashboard</a></li>
               <li className="nav-item"><a className="nav-link" href="/reports">Reports</a></li>
               <li className="nav-item"><a className="nav-link" href="/about">About</a></li>
