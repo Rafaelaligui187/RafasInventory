@@ -250,6 +250,7 @@ export default function Products() {
                 <h5 className="modal-title">{isEditing ? "Edit Product" : "Add Product"}</h5>
                 <button className="btn-close" onClick={() => setShowModal(false)}></button>
               </div>
+
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -257,6 +258,8 @@ export default function Products() {
                 }}
               >
                 <div className="modal-body">
+
+                  {/* PRODUCT NAME */}
                   <input
                     name="name"
                     className="form-control mb-2"
@@ -265,6 +268,8 @@ export default function Products() {
                     onChange={handleChange}
                     required
                   />
+
+                  {/* PRICE */}
                   <input
                     name="price"
                     type="number"
@@ -274,23 +279,32 @@ export default function Products() {
                     onChange={handleChange}
                     required
                   />
-                  <input
-                    name="stock"
-                    type="number"
-                    className="form-control mb-2"
-                    placeholder="Stock"
-                    value={form.stock}
-                    onChange={handleChange}
-                    required
-                  />
+
+                  {/* STOCK — only visible when ADDING */}
+                  {!isEditing && (
+                    <input
+                      name="stock"
+                      type="number"
+                      className="form-control mb-2"
+                      placeholder="Initial Stock"
+                      value={form.stock}
+                      onChange={handleChange}
+                      required
+                    />
+                  )}
+
+                  {/* IMAGE */}
                   <input
                     type="file"
                     name="image"
                     className="form-control mb-2"
                     onChange={handleChange}
-                    required={!isEditing}
+                    required={!isEditing} 
                   />
+
                   {form.image && <img src={form.image} alt="Preview" className="img-fluid mb-2" />}
+
+                  {/* DESCRIPTION */}
                   <textarea
                     name="productDescription"
                     className="form-control"
@@ -299,6 +313,7 @@ export default function Products() {
                     onChange={handleChange}
                   />
                 </div>
+
                 <div className="modal-footer justify-content-center">
                   <button className="btn btn-secondary" type="button" onClick={() => setShowModal(false)}>
                     Cancel
@@ -312,6 +327,7 @@ export default function Products() {
           </div>
         </div>
       )}
+
 
       {/* View Product Modal */}
       {viewProduct && (
