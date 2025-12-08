@@ -15,6 +15,7 @@ import Reports from './pages/Reports'
 import StockHistory from './pages/StockHistory'
 import Dashboard from './pages/Dashboard'
 import Accountmanage from './pages/accountmanage'
+import SalesHistory from './pages/SalesHistory'
 
 // NEW: Private Route
 import PrivateRoute from "./PrivateRoute"
@@ -29,7 +30,7 @@ const Layout = ({ children }) => {
       {!hideLayout && <Navbar />}
       {children}
       
-      {/* IF U WANT TO ENABLE FOOTER */}
+      {/* IF U WANT TO ENABLE FOOTER just uncomment this line*/}
       {/* {!hideLayout && <Footer />} */}      
     </>
   )
@@ -95,6 +96,15 @@ const App = () => {
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+
+          <Route 
+            path="/saleshistory" 
+            element={
+              <PrivateRoute>
+                <SalesHistory />
               </PrivateRoute>
             }
           />

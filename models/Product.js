@@ -8,7 +8,7 @@ const ProductSchema = new mongoose.Schema({
   sku: { type: String, required: true }, ///SKU barcode
   productDescription: { type: String, default: "" }, // <- added
   ownedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  category: { type: String, required: true }
+  category: { type: String, default: "Uncategorized" },
 }, { timestamps: true });
 
 export default mongoose.model("Product", ProductSchema);

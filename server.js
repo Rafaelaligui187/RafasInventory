@@ -6,6 +6,8 @@ import bcrypt from "bcrypt";   // ✅ ADD THIS
 import User from "./models/User.js";
 import productRoutes from "./routes/productRoutes.js";
 import stockHistoryRoutes from "./routes/stockHistoryRoutes.js";
+import salesRoutes from "./routes/salesRoutes.js";
+
 
 dotenv.config({ path: ".env.local" });
 
@@ -26,6 +28,9 @@ app.get("/", (req, res) => {
   res.send("Backend connected to MongoDB Atlas!");
 });
 
+
+///FOR SALE
+app.use("/api/sales", salesRoutes);
 
 
 // SIGNUP route

@@ -13,6 +13,9 @@ export default function Products() {
   const [showStockModal, setShowStockModal] = useState(false);
   const [stockForm, setStockForm] = useState({ quantity: 0, action: "IN", productId: null });
   const [stockHistory, setStockHistory] = useState([]);
+  const [showSellModal, setShowSellModal] = useState(false);
+  const [sellForm, setSellForm] = useState({ productId: null, quantity: 1, pricePerUnit: 0 });
+  const [sales, setSales] = useState([]);
 
   const [form, setForm] = useState({
     name: "",
@@ -63,6 +66,7 @@ export default function Products() {
   // Load products and stock history once
   loadProducts();
   loadStockHistory();
+  loadSales();
 }, []); // keep empty dependency so it runs only on mount
 
 // NEW useEffect: handle body scroll when modals are open
@@ -180,6 +184,50 @@ useEffect(() => {
       p.sku.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  ///FOR SALE
+  const handleSellModal = (product) => {
+  setSellForm({
+    productId: product._id,
+    quantity: 1,
+    pricePerUnit: product.price || 0
+  });
+  setShowSellModal(true);
+};
+const handleSellChange = (e) => {
+  setSellForm({ ...sellForm, [e.target.name]: e.target.value });
+};
+
+const handleSaveSale = async () => {
+  try {
+    await axios.post("http://localhost:5000/api/sales/add", {
+      ...sellForm,
+      quantity: Number(sellForm.quantity),
+      pricePerUnit: Number(sellForm.pricePerUnit),
+      ownedBy: userId
+    });
+    setShowSellModal(false);
+    setSellForm({ productId: null, quantity: 1, pricePerUnit: 0 });
+    await loadProducts();
+    await loadStockHistory();
+    await loadSales();
+  } catch (err) {
+    console.error("Error saving sale", err);
+    alert(err.response?.data?.message || "Error saving sale");
+  }
+};
+
+const loadSales = async () => {
+  try {
+    const res = await axios.get(`http://localhost:5000/api/sales/${userId}`);
+    setSales(res.data);
+  } catch (err) {
+    console.error("Error loading sales", err);
+  }
+};
+//////////////////////////////////////////////////////////////
+
+
+/////?Categories.  Add more if u want
   const categories = [
   "Electronics",
   "Apparel",
@@ -188,9 +236,6 @@ useEffect(() => {
   "Stationery",
   "Health & Beauty",
 ];
-
-
-
 
 
   return (
@@ -243,8 +288,11 @@ useEffect(() => {
                 <button className="btn btn-danger w-100 mb-1" onClick={() => handleDeleteProduct(product._id)}>
                   Delete
                 </button>
-                <button className="btn btn-warning w-100" onClick={() => handleStockModal(product)}>
+                <button className="btn btn-warning w-100 mb-1" onClick={() => handleStockModal(product)}>
                   Update Stock
+                </button>
+                <button className="btn btn-success w-100 mb-1" onClick={() => handleSellModal(product)}>
+                  Sell Product
                 </button>
               </div>
             </div>
@@ -335,7 +383,6 @@ useEffect(() => {
                   className="form-control mb-2"
                   value={form.category || ""}
                   onChange={handleChange}
-                  required
                 >
                   <option value="">Select Category</option>
                   {categories.map((cat, index) => (
@@ -468,6 +515,55 @@ useEffect(() => {
           </div>
         </div>
       )}
+
+      {/* Sell Modal */}
+        {showSellModal && (
+          <div className="modal fade show d-flex align-items-center justify-content-center"
+              style={{ display: "flex", background: "rgba(0,0,0,0.5)", minHeight: "100vh" }}>
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Sell Product</h5>
+                  <button className="btn-close" onClick={() => setShowSellModal(false)}></button>
+                </div>
+                <div className="modal-body">
+                  <label>Product:</label>
+                  <input className="form-control mb-2" disabled value={
+                    products.find(p => p._id === sellForm.productId)?.name || ""
+                  } />
+
+                  <label>Quantity:</label>
+                  <input
+                    type="number"
+                    name="quantity"
+                    className="form-control mb-2"
+                    min="1"
+                    value={sellForm.quantity}
+                    onChange={handleSellChange}
+                  />
+
+                  <label>Price per unit:</label>
+                  <input
+                    type="number"
+                    name="pricePerUnit"
+                    className="form-control mb-2"
+                    value={sellForm.pricePerUnit}
+                    onChange={handleSellChange}
+                  />
+
+                  <div className="mt-2">
+                    <strong>Total: ₱ { (Number(sellForm.quantity) * Number(sellForm.pricePerUnit)).toFixed(2) }</strong>
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button className="btn btn-secondary" onClick={() => setShowSellModal(false)}>Cancel</button>
+                  <button className="btn btn-success" onClick={handleSaveSale}>Confirm Sell</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 }
