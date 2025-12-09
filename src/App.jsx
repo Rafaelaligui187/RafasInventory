@@ -92,13 +92,14 @@ const App = () => {
           />
 
           <Route 
-            path="/dashboard" 
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
+  path="/dashboard" 
+  element={
+    <PrivateRoute>
+      <Dashboard userId={localStorage.getItem("userId")} />
+    </PrivateRoute>
+  }
+/>
+
 
           <Route 
             path="/saleshistory" 
