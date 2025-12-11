@@ -211,26 +211,6 @@ export default function Dashboard({ userId }) {
       <p className="text-center">No stock activity yet</p>
     )}
   </div>
-
-
-  {/* LINE CHART */}
-  <div className="mt-4">
-    <h5 className="text-center">Stock Activity Timeline</h5>
-    {lineData.length > 0 ? (
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={lineData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Line type="monotone" dataKey="quantity" stroke="#8884d8" />
-        </LineChart>
-      </ResponsiveContainer>
-    ) : (
-      <p className="text-center">No stock activity yet</p>
-    )}
-  </div>
 </div>
-
   );
 }

@@ -383,6 +383,7 @@ const loadSales = async () => {
                   className="form-control mb-2"
                   value={form.category || ""}
                   onChange={handleChange}
+                  required
                 >
                   <option value="">Select Category</option>
                   {categories.map((cat, index) => (
@@ -403,7 +404,6 @@ const loadSales = async () => {
           </div>
         </div>
       )}
-
 
       {/* View Product Modal */}
       {viewProduct && (
