@@ -18,11 +18,39 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB Atlas
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("✅ Connected to MongoDB Atlas (RafasInventory DB)"))
-  .catch((err) => console.log("❌ MongoDB Atlas Error:", err));
+// Configure Mongoose and connect to MongoDB Atlas with pooling options
+mongoose.set("strictQuery", false);
+
+async function connectWithRetry() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      // Limit pool size to avoid exhausting MongoDB Atlas connection limits
+      maxPoolSize: Number(process.env.MONGODB_MAX_POOL_SIZE) || 10,
+      // shorter server selection timeout helps fail fast in bad networks
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000
+    });
+    console.log("✅ Connected to MongoDB Atlas (RafasInventory DB)");
+  } catch (err) {
+    console.error("❌ MongoDB Atlas Error:", err);
+    // retry with exponential backoff
+    setTimeout(connectWithRetry, 2000);
+  }
+}
+
+connectWithRetry();
+
+// Graceful shutdown
+process.on("SIGINT", async () => {
+  try {
+    await mongoose.disconnect();
+    console.log("🛑 Mongoose disconnected through app termination");
+    process.exit(0);
+  } catch (err) {
+    console.error("Error during mongoose disconnect:", err);
+    process.exit(1);
+  }
+});
 
 // Test route
 app.get("/", (req, res) => {
