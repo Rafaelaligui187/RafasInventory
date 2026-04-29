@@ -3,6 +3,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Barcode from "react-barcode";
 
+
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -32,8 +33,7 @@ export default function Products() {
   const uploadImageToImgBB = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
-    const res = await fetch(
-      `https://api.imgbb.com/1/upload?key=4b59f8977ddecb0dae921ba1d6a3654d`,
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
       { method: "POST", body: formData }
     );
     const data = await res.json();

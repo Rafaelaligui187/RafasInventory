@@ -72,7 +72,7 @@ app.post("/signup", async (req, res) => {
 
   try {
     const { firstName, lastName, email, password } = req.body;
-    console.log("Extracted:", { firstName, lastName, email, password });
+    console.log("Extracted:", { firstName, lastName, email});
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
