@@ -14,7 +14,7 @@ import Signup from './Signup/Signup'
 import Reports from './pages/Reports'
 import StockHistory from './pages/StockHistory'
 import Dashboard from './pages/Dashboard'
-import Accountmanage from './pages/accountmanage'
+import Accountmanage from './pages/Accountmanage'
 import SalesHistory from './pages/SalesHistory'
 
 // NEW: Private Route
